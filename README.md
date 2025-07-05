@@ -1,22 +1,28 @@
-## 📌 Run this project on Google Colab
+🚀 📌 Run this project on Google Colab
+1️⃣ Open Google Colab
+Go to Google Colab
 
-### 1 Open Google Colab
-Go to [Google Colab](https://colab.research.google.com/).
-
----
-
-###  2  Download Dependencies
-!pip install --upgrade pandas numpy matplotlib scikit-learn tensorflow
-
-### 3 Clone this repository
+2️⃣ Download dependencies
 In a Colab notebook cell, run:
-```python
+
+python
+Copy
+Edit
+!pip install --upgrade pandas numpy matplotlib scikit-learn tensorflow
+3️⃣ Clone this repository
+python
+Copy
+Edit
 !git clone https://github.com/sidddha2004/UAV-beam.git
 %cd UAV-beam
-
-### 4 Run- The First file**
+4️⃣ Run the first file
+python
+Copy
+Edit
 !python Classification-1.py
-
-### 5 Updated-File**
+5️⃣ Run the updated file
+python
+Copy
+Edit
 !python Classification_Updated.py
 
