@@ -9,7 +9,7 @@ from tensorflow.keras.layers import LSTM, Dense,Dropout
 from tensorflow.keras.metrics import TopKCategoricalAccuracy
 
 # Load dataset
-X = pd.read_csv('/content/synthetic_beamforming_dataset_doubled.csv')
+X = pd.read_csv('synthetic_beamforming_dataset_doubled.csv')
 
 # Preprocess: scale input features
 scaler = MinMaxScaler()
