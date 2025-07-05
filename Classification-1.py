@@ -5,7 +5,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense
+from tensorflow.keras.layers import LSTM, Dense,Input
 
 # Load dataset
 X = pd.read_csv('synthetic_beamforming_dataset_doubled.csv')
@@ -41,7 +41,7 @@ X_train, X_test, y_train, y_test = train_test_split(X_sequences, y_categorical, 
 # Build model
 model = Sequential()
 model.add(Input(shape=(sequence_length, X_sequences.shape[2])))
-model.add(LSTM(64)
+model.add(LSTM(64))
 model.add(Dense(64, activation='softmax'))
 
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
