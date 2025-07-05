@@ -40,7 +40,8 @@ X_train, X_test, y_train, y_test = train_test_split(X_sequences, y_categorical, 
 
 # Build model
 model = Sequential()
-model.add(LSTM(64, input_shape=(sequence_length, X_sequences.shape[2])))
+model.add(Input(shape=(sequence_length, X_sequences.shape[2])))
+model.add(LSTM(64)
 model.add(Dense(64, activation='softmax'))
 
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
