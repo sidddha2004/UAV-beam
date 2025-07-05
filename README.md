@@ -8,17 +8,8 @@ Go to [Google Colab](https://colab.research.google.com/)
 
 ---
 
-### 2️⃣ Install dependencies
 
-In a Colab notebook cell, run:
-
-```bash
-!pip install --upgrade pandas numpy matplotlib scikit-learn tensorflow
-```
-
----
-
-### 3️⃣ Clone this repository
+### 2 Clone this repository
 
 ```bash
 !git clone https://github.com/sidddha2004/UAV-beam.git
@@ -27,7 +18,7 @@ In a Colab notebook cell, run:
 
 ---
 
-### 4️⃣ Run the first file
+### 3 Run the first file
 
 ```bash
 !python Classification-1.py
@@ -35,7 +26,7 @@ In a Colab notebook cell, run:
 
 ---
 
-### 5️⃣ Run the updated file
+### 4 Run the updated file
 
 ```bash
 !python Classification_Updated.py
@@ -48,7 +39,6 @@ In a Colab notebook cell, run:
 * You can combine all commands into a single Colab cell:
 
   ```bash
-  !pip install --upgrade pandas numpy matplotlib scikit-learn tensorflow
   !git clone https://github.com/sidddha2004/UAV-beam.git
   %cd UAV-beam
   !python Classification-1.py
