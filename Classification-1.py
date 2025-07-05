@@ -8,7 +8,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense
 
 # Load dataset
-X = pd.read_csv('/content/synthetic_beamforming_dataset_doubled.csv')
+X = pd.read_csv('synthetic_beamforming_dataset_doubled.csv')
 
 # Preprocess: scale input features
 scaler = MinMaxScaler()
