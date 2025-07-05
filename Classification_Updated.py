@@ -1,3 +1,6 @@
+import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'  # Optional: disables GPU warnings if using CPU
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -5,58 +8,63 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense,Dropout
+from tensorflow.keras.layers import Input, LSTM, Dropout, Dense
 from tensorflow.keras.metrics import TopKCategoricalAccuracy
 
 # Load dataset
-X = pd.read_csv('synthetic_beamforming_dataset_doubled.csv')
+df = pd.read_csv('synthetic_beamforming_dataset_doubled.csv')
 
-# Preprocess: scale input features
+# Feature scaling (excluding target)
 scaler = MinMaxScaler()
-scaled_features = scaler.fit_transform(X.drop(columns=['beam_index_target']))
-scaled_df = pd.DataFrame(scaled_features, columns=X.columns[:-1])
-scaled_df['beam_index_target'] = X['beam_index_target']  # Add target back
+features_scaled = scaler.fit_transform(df.drop(columns=['beam_index_target']))
+scaled_df = pd.DataFrame(features_scaled, columns=df.columns[:-1])
+scaled_df['beam_index_target'] = df['beam_index_target']
 
 # Create sequences for LSTM
 sequence_length = 7
-X_sequences = []
-y_labels = []
+X_seq, y_seq = [], []
 
 for i in range(len(scaled_df) - sequence_length):
     seq = scaled_df.iloc[i:i+sequence_length].drop(columns=['beam_index_target']).values
     target = int(scaled_df.iloc[i + sequence_length]['beam_index_target'])
+    X_seq.append(seq)
+    y_seq.append(target)
 
-    X_sequences.append(seq)
-    y_labels.append(target)
+X_seq = np.array(X_seq)
+y_seq = to_categorical(y_seq, num_classes=64)
 
-# Convert to arrays
-X_sequences = np.array(X_sequences)
-y_labels = np.array(y_labels)
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X_seq, y_seq, test_size=0.2, random_state=42)
 
-# One-hot encode the target labels
-y_categorical = to_categorical(y_labels, num_classes=64)
+# Build LSTM model
+model = Sequential([
+    Input(shape=(sequence_length, X_seq.shape[2])),
+    LSTM(128, return_sequences=True),
+    Dropout(0.3),
+    LSTM(64),
+    Dropout(0.3),
+    Dense(64, activation='softmax')
+])
 
-# Split data
-X_train, X_test, y_train, y_test = train_test_split(X_sequences, y_categorical, test_size=0.2, random_state=42)
-
-# Build model
-model = Sequential()
-model.add(LSTM(128,return_sequences=True, input_shape=(sequence_length, X_sequences.shape[2])))
-model.add(Dropout(0.3))
-model.add(LSTM(64))
-model.add(Dropout(0.3))
-model.add(Dense(64, activation='softmax'))
-
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy',TopKCategoricalAccuracy(k=5)])
+model.compile(
+    loss='categorical_crossentropy',
+    optimizer='adam',
+    metrics=['accuracy', TopKCategoricalAccuracy(k=5)]
+)
 model.summary()
 
-# Train the model
-history = model.fit(X_train, y_train, epochs=20, batch_size=8, validation_data=(X_test, y_test))
+# Train model
+history = model.fit(
+    X_train, y_train,
+    epochs=20,
+    batch_size=8,
+    validation_data=(X_test, y_test)
+)
 
 # Plot training history
 plt.figure(figsize=(12, 5))
 
-# Accuracy plot
+# Accuracy
 plt.subplot(1, 2, 1)
 plt.plot(history.history['accuracy'], label='Train Accuracy', marker='o')
 plt.plot(history.history['val_accuracy'], label='Val Accuracy', marker='o')
@@ -66,7 +74,7 @@ plt.ylabel('Accuracy')
 plt.legend()
 plt.grid(True)
 
-# Loss plot
+# Loss
 plt.subplot(1, 2, 2)
 plt.plot(history.history['loss'], label='Train Loss', marker='o')
 plt.plot(history.history['val_loss'], label='Val Loss', marker='o')
