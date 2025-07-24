@@ -40,9 +40,9 @@ X_train, X_test, y_train, y_test = train_test_split(X_seq, y_seq, test_size=0.2,
 model = Sequential([
     Input(shape=(sequence_length, X_seq.shape[2])),
     LSTM(128, return_sequences=True),
-    Dropout(0.3),
+    Dropout(0.2),
     LSTM(64),
-    Dropout(0.3),
+    Dropout(0.2),
     Dense(64, activation='softmax')
 ])
 
@@ -56,7 +56,7 @@ model.summary()
 # Train model
 history = model.fit(
     X_train, y_train,
-    epochs=20,
+    epochs=30,
     batch_size=8,
     validation_data=(X_test, y_test)
 )
